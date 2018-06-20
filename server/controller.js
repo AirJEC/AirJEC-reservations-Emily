@@ -36,4 +36,14 @@ module.exports = {
       next();
     },
   },
+  put: {
+    update() {
+
+    },
+  },
+  delete: {
+    remove() {
+
+    },
+  },
 };

@@ -12,4 +12,7 @@ app.use(bodyParser.json())
   .use('/rooms/:id', express.static(path.join(__dirname, '../public')))
   .get('/reservations/:id', controller.get.roomDetailsAndAvailNights)
   .post('/reservations/:id', controller.post.booking)
-  .listen(PORT, () => console.log(`listening on port ${PORT}`));
+  .put('/reservations/:id', controller.put.update)
+  .delete('/reservations/:id', controller.put.remove)
+  .listen(PORT, () => console.log(`listening on port ${PORT}`)
+);
