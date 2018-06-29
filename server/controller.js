@@ -1,16 +1,18 @@
-const db = require('../database/index');
+const db = require('../database/pgdb/index');
 
 module.exports = {
   get: {
     roomDetailsAndAvailNights(req, res) {
       const data = [];
+      console.log(db.getRoomDetails(10).catch(e => console.log(e)));
       db.getRoomDetails(req.params.id)
         .then((roomDetails) => {
-          data.push(roomDetails);
+          data.push(roomDetails.rows);
           return db.getAvailNights(req.params.id);
         })
         .then((availNights) => {
           data.push(availNights);
+          console.log('THIRD DATA', data);
           res.json(data);
         })
         .catch(err => res.status(500).send(err));
@@ -36,14 +38,14 @@ module.exports = {
       next();
     },
   },
-  put: {
-    update() {
+  // put: {
+  //   update() {
 
-    },
-  },
-  delete: {
-    remove() {
+  //   },
+  // },
+  // delete: {
+  //   remove() {
 
-    },
-  },
+  //   },
+  // },
 };

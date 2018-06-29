@@ -1,10 +1,12 @@
-const controller = require('./controller');
 const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 
+const controller = require('./controller');
+const db = require('../database/pgdb/index');
+
 const app = express();
-const PORT = process.env.PORT || 3004;
+const PORT = 3004;
 
 app.use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
@@ -12,7 +14,7 @@ app.use(bodyParser.json())
   .use('/rooms/:id', express.static(path.join(__dirname, '../public')))
   .get('/reservations/:id', controller.get.roomDetailsAndAvailNights)
   .post('/reservations/:id', controller.post.booking)
-  .put('/reservations/:id', controller.put.update)
-  .delete('/reservations/:id', controller.put.remove)
+  // .put('/reservations/:id', controller.put.update)
+  // .delete('/reservations/:id', controller.put.remove)
   .listen(PORT, () => console.log(`listening on port ${PORT}`)
 );
