@@ -1,4 +1,5 @@
 const { Client } = require('pg');
+const moment = require('moment');
 const pgconfig = require('./../../config/config');
 
 const client = new Client({
@@ -10,7 +11,6 @@ const client = new Client({
 
 client.connect();
 
-const moment = require('moment');
 
 const getRoomDetails = (roomId) => {
   const queryStr = 'SELECT * FROM rooms WHERE id = $1';
