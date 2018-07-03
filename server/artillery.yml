@@ -1,7 +1,3 @@
-
-
-
-
 config:
   target: "http://localhost:3004"
   phases:
@@ -10,51 +6,30 @@ config:
       name: "Warm up the application"
     - duration: 120
       arrivalRate: 1
-      rampTo: 10
+      rampTo: 15
       name: "jump to max load"
     - duration: 120
-      arrivalRate: 10
+      arrivalRate: 15
       name: "keep at the max load"
     - duration: 60
-      arrivalRate: 10
+      arrivalRate: 15
       rampTo: 1
       name: "calm down"
   defaults:
     headers:
       x-my-service-auth: '987401838271002188298567'
 scenarios:
-    - flow:
+  - name: "Eighty"
+    weight: 4
+    flow:
         - loop:
             - get:
-                url: "/rooms/{{$randomNumber(1, 1000)}}"
+                url: "/reservations/{{ $randomNumber(8000001, 10000000) }}"
           count: 100
-
-
-  phases:
-    - duration: 60
-      arrivalRate: 5
-    - duration: 120
-      arrivalRate: 5
-      rampTo: 50
-    - duration: 600
-      arrivalRate: 50
-  payload:
-    path: "keywords.csv"
-    fields:
-      - "keywords"
-scenarios:
-  - name: "Search and buy"
+  - name: "Twenty"
+    weight: 1
     flow:
-      - post:
-          url: "/search"
-          body: "kw={{ keywords }}"
-          capture:
-            json: "$.results[0].id"
-            as: "id"
-      - get:
-          url: "/details/{{ id }}"
-      - think: 3
-      - post:
-          url: "/cart"
-          json:
-            productId: "{{ id }}"
+       - loop:
+          - get:
+             url: "/reservations/{{ $randomNumber(1, 8000000) }}"
+         count: 100

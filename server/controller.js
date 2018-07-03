@@ -4,15 +4,9 @@ module.exports = {
   get: {
     roomDetailsAndAvailNights(req, res) {
       const data = [];
-      console.log(db.getRoomDetails(10).catch(e => console.log(e)));
-      db.getRoomDetails(req.params.id)
-        .then((roomDetails) => {
-          data.push(roomDetails.rows);
-          return db.getAvailNights(req.params.id);
-        })
+      db.getAvailNights(req.params.id)
         .then((availNights) => {
-          data.push(availNights);
-          console.log('THIRD DATA', data);
+          data.push(availNights.data, availNights.hash);
           res.json(data);
         })
         .catch(err => res.status(500).send(err));
@@ -21,10 +15,28 @@ module.exports = {
   post: {
     booking(req, res) {
       const booking = req.body;
-      booking.room_id = req.params.id;
+      booking.room_id = parseInt(req.params.id);
       db.insertBooking(booking)
         .then(() => res.sendStatus(201))
         .catch(err => res.status(400).send(err));
+    },
+  },
+  put: {
+    updateGuest(req, res) {
+      const newGuestInfo = req.body
+      db.updateGuestInfo(newGuestInfo)
+        .then(() => res.sendStatus(201))
+        .catch(err => res.status(400).send(err))
+    },
+  },
+  delete: {
+    removeBooking(req, res) {
+      const bookingInfo = req.body
+      const roomId = parseInt(req.params.id);
+      bookingInfo.room_id = roomId;
+      db.deleteBooking(bookingInfo)
+      .then(() => res.sendStatus(201))
+      .catch(err => res.status(400).send(err))
     },
   },
   options: {
@@ -37,15 +49,5 @@ module.exports = {
       });
       next();
     },
-  },
-  // put: {
-  //   update() {
-
-  //   },
-  // },
-  // delete: {
-  //   remove() {
-
-  //   },
-  // },
+  }
 };

@@ -25,3 +25,9 @@ logfile
 #vs code
 .vscode/
 
+#New Relic
+server/newrelic_agent.log
+newrelic.js
+
+#Artillery
+server/artillery.yml

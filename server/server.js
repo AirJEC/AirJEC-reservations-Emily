@@ -1,3 +1,4 @@
+require('newrelic');
 const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
@@ -14,7 +15,7 @@ app.use(bodyParser.json())
   .use('/rooms/:id', express.static(path.join(__dirname, '../public')))
   .get('/reservations/:id', controller.get.roomDetailsAndAvailNights)
   .post('/reservations/:id', controller.post.booking)
-  // .put('/reservations/:id', controller.put.update)
-  // .delete('/reservations/:id', controller.put.remove)
+  .put('/reservations/:id', controller.put.updateGuest)
+  .delete('/reservations/:id', controller.delete.removeBooking)
   .listen(PORT, () => console.log(`listening on port ${PORT}`)
 );
