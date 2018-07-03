@@ -1,16 +1,12 @@
-const db = require('../database/index');
+const db = require('../database/pgdb/index');
 
 module.exports = {
   get: {
     roomDetailsAndAvailNights(req, res) {
       const data = [];
-      db.getRoomDetails(req.params.id)
-        .then((roomDetails) => {
-          data.push(roomDetails);
-          return db.getAvailNights(req.params.id);
-        })
+      db.getAvailNights(req.params.id)
         .then((availNights) => {
-          data.push(availNights);
+          data.push(availNights.data, availNights.hash);
           res.json(data);
         })
         .catch(err => res.status(500).send(err));
@@ -19,10 +15,28 @@ module.exports = {
   post: {
     booking(req, res) {
       const booking = req.body;
-      booking.room_id = req.params.id;
+      booking.room_id = parseInt(req.params.id);
       db.insertBooking(booking)
         .then(() => res.sendStatus(201))
         .catch(err => res.status(400).send(err));
+    },
+  },
+  put: {
+    updateGuest(req, res) {
+      const newGuestInfo = req.body
+      db.updateGuestInfo(newGuestInfo)
+        .then(() => res.sendStatus(201))
+        .catch(err => res.status(400).send(err))
+    },
+  },
+  delete: {
+    removeBooking(req, res) {
+      const bookingInfo = req.body
+      const roomId = parseInt(req.params.id);
+      bookingInfo.room_id = roomId;
+      db.deleteBooking(bookingInfo)
+      .then(() => res.sendStatus(201))
+      .catch(err => res.status(400).send(err))
     },
   },
   options: {
@@ -35,5 +49,5 @@ module.exports = {
       });
       next();
     },
-  },
+  }
 };

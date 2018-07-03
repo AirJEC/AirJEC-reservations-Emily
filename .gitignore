@@ -7,3 +7,27 @@ node_modules
 #docker files
 Dockerfile
 docker-compose.yml
+
+#config
+config/
+
+#data seed csv's
+database/guests.csv
+database/rooms.csv
+database/mysqldb/
+database/cassandraDB/
+database/mongoDB/
+database/nights.csv
+
+#log file
+logfile
+
+#vs code
+.vscode/
+
+#New Relic
+server/newrelic_agent.log
+newrelic.js
+
+#Artillery
+server/artillery.yml
