@@ -1,16 +1,28 @@
 const db = require('../database/pgdb/index');
+const cache = require('../server/redis.js')
 
 module.exports = {
   get: {
     roomDetailsAndAvailNights(req, res) {
       const data = [];
-      db.getAvailNights(req.params.id)
-        .then((availNights) => {
-          data.push(availNights.data, availNights.hash);
-          res.json(data);
+      const roomNum = req.params.id;
+      cache.getFromRedisAsync(roomNum)
+        .then((redisData) => {
+          if (redisData != null) {
+            console.log('REDIS!!!')
+            res.send(JSON.parse(redisData));
+          } else {
+            db.getAvailNights(roomNum)
+              .then((availNights) => {
+                console.log('db');
+                data.push(availNights.data, availNights.hash);
+                cache.saveToRedisAsync(roomNum, JSON.stringify(data), 'EX', 1500);
+                res.json(data);
+              })
+          }
         })
         .catch(err => res.status(500).send(err));
-    },
+    }  
   },
   post: {
     booking(req, res) {

@@ -31,3 +31,6 @@ newrelic.js
 
 #Artillery
 server/artillery.yml
+
+#redis
+dump.rdb
